@@ -6,6 +6,9 @@
 #include "../lib/huffmate/src/tokens/ERC721.huff"
 
 
+#define macro CONSTRUCTOR() = takes (0) returns (0) {
+    ERC721_CONSTRUCTOR()
+}
 
 #define macro MAIN() = takes(0) returns(0){
     0x00 calldataload 0xe0 shr                  // function selector
