@@ -1,0 +1,83 @@
+// Imports
+// #include "../lib/huffmate/src/data-structures/Hashmap.huff"
+// #include "../lib/huffmate/src/utils/CommonErrors.huff"
+// #include "../lib/huffmate/src/auth/NonPayable.huff"
+// import probably won't work on the token. Let's see
+#include "../lib/huffmate/src/tokens/ERC721.huff"
+
+
+
+#define macro MAIN() = takes(0) returns(0){
+    0x00 calldataload 0xe0 shr                  // function selector
+
+
+    //////////////////////////////
+    //////////////////////////////
+    //// Huffmate Dispatch ///////
+    //////////////////////////////
+    //////////////////////////////
+
+    dup1 __FUNC_SIG(mint)                       eq mint_jump jumpi
+    dup1 __FUNC_SIG(burn)                       eq burn_jump jumpi
+
+    // dup1 __FUNC_SIG("safeMint(address,uint256)") eq safe_mint jumpi
+    // dup1 __FUNC_SIG("safeMint(address,uint256,bytes)") eq safe_mint_with_data jumpi
+
+    dup1 __FUNC_SIG(approve)                    eq approve jumpi
+    dup1 __FUNC_SIG(setApprovalForAll)          eq setApprovalForAll jumpi
+
+    dup1 __FUNC_SIG(transferFrom)               eq transferFrom jumpi
+    dup1 __FUNC_SIG(safeTransferFrom)           eq safeTransferFrom jumpi
+
+    dup1 __FUNC_SIG(name)                       eq name jumpi
+    dup1 __FUNC_SIG(symbol)                     eq symbol jumpi
+    dup1 __FUNC_SIG(tokenURI)                   eq tokenURI jumpi
+    dup1 __FUNC_SIG(supportsInterface)          eq supportsInterface jumpi
+
+    dup1 __FUNC_SIG(getApproved)                eq getApproved jumpi
+    dup1 __FUNC_SIG(isApprovedForAll)           eq isApprovedForAll jumpi
+
+    dup1 __FUNC_SIG(balanceOf)                  eq balanceOf jumpi
+    dup1 __FUNC_SIG(ownerOf)                    eq ownerOf jumpi
+    
+    
+    
+    0x00 dup1 revert                            // revert if none of the function selectors match. No fallback
+
+
+    mint_jump:
+        _MINT()
+    burn_jump:
+        _BURN()
+
+    approve:
+        APPROVE()
+    setApprovalForAll:
+        SET_APPROVAL_FOR_ALL()
+
+    transferFrom:
+        TRANSFER_FROM()
+    safeTransferFrom:
+        SAFE_TRANSFER_FROM()
+    safeTransferFromData:
+        SAFE_TRANSFER_FROM_WITH_DATA()
+
+    name:
+        NAME()
+    symbol:
+        SYMBOL()
+    tokenURI:
+        TOKEN_URI()
+    supportsInterface:
+        SUPPORTS_INTERFACE()
+
+    getApproved:
+        GET_APPROVED()
+    isApprovedForAll:
+        IS_APPROVED_FOR_ALL()
+
+    balanceOf:
+        BALANCE_OF()
+    ownerOf:
+        OWNER_OF()
+}
