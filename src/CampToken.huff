@@ -7,10 +7,10 @@
 
 // constants
 #define constant TOKENID_TRACKING_LOCATION = FREE_STORAGE_POINTER()
+#define constant ONE_TIME_MINTING_MAPPING_LOC = FREE_STORAGE_POINTER()
 
 
 // Interface
-
 #define function mintToken() payable returns ()
 
 
@@ -21,12 +21,20 @@
 
 
 #define macro MINT_TOKEN() = takes(0) returns(0) {
+    caller [ONE_TIME_MINTING_MAPPING_LOC]       // [one_time_mapping_slot, msg.sender]
+     LOAD_ELEMENT_FROM_KEYS(0x00)               // [whether caller has minted before: true/false]
+    alreadyMintedJump jumpi
+    pop                                         // [true/false] gets popped? Works without it too
     [TOKENID_TRACKING_LOCATION] sload           // [unused tokenid]
     dup1 caller                                 // [msg.sender, unused tokenid, unused tokenid]
     _MINT()                                     // [unused tokenId]
     0x01 add                                    // [unused tokenId +1(updated tokenid)]
     [TOKENID_TRACKING_LOCATION] sstore          // []
+    0x01 caller [ONE_TIME_MINTING_MAPPING_LOC]  // [one_time_mapping_slot, msg.sender, true]
+    STORE_ELEMENT_FROM_KEYS(0x00)               // []
     stop
+    alreadyMintedJump: 0x00 0x00 revert          // dumb revert for now. TODO: custom error
+
 }
 
 

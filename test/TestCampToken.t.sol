@@ -55,4 +55,22 @@ contract TestCampTokenHuff is Test {
         assertEq(token.ownerOf(0), user1);
         assertEq(token.ownerOf(1), user2);
     }
+
+    function testDoubleMintingFromSameUserFails() public {
+        vm.startPrank(user1);
+        token.mintToken();
+        vm.expectRevert();
+        token.mintToken();
+        vm.stopPrank();
+    }
+
+    // the vanilla functions work as of now.
+    // if the token needs to be converted to a soulbound token, the test will need to be adjusted
+
+    function testTransfer() public {
+        vm.startPrank(user1);
+        token.mintToken();
+        token.safeTransferFrom(user1, user3, 0); // (user3, 0);
+        assertEq(token.ownerOf(0), user3);
+    }
 }
