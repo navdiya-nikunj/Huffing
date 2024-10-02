@@ -5,7 +5,7 @@
 // import probably won't work on the token. Let's see
 #include "../lib/huffmate/src/tokens/ERC721.huff"
 
-
+// constants
 #define constant TOKENID_TRACKING_LOCATION = FREE_STORAGE_POINTER()
 
 

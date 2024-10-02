@@ -41,4 +41,18 @@ contract TestCampTokenHuff is Test {
         assertEq(user1Balance, 1);
         assertEq(token.ownerOf(0), user1);
     }
+
+    function testTokenIDgetsUpdated() public {
+        vm.prank(user1);
+        token.mintToken();
+        vm.prank(user2);
+        token.mintToken();
+        uint256 user1Balance = token.balanceOf(user1);
+        uint256 user2Balance = token.balanceOf(user2);
+
+        assertEq(user1Balance, 1);
+        assertEq(user2Balance, 1);
+        assertEq(token.ownerOf(0), user1);
+        assertEq(token.ownerOf(1), user2);
+    }
 }
