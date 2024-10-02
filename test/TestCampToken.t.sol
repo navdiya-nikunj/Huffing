@@ -9,6 +9,10 @@ contract TestCampTokenHuff is Test {
     string public constant NFT_NAME = "CampToken";
     string public constant NFT_SYMBOL = "CPT";
 
+    address user1 = makeAddr("User 1");
+    address user2 = makeAddr("User 2");
+    address user3 = makeAddr("User 3");
+
     CampToken token;
 
     function setUp() public {
@@ -27,5 +31,14 @@ contract TestCampTokenHuff is Test {
     function testSymbol() public view {
         string memory tokenSymbol = token.symbol();
         assertEq(tokenSymbol, NFT_SYMBOL);
+    }
+
+    function testMinting() public {
+        vm.prank(user1);
+        token.mintToken();
+        uint256 user1Balance = token.balanceOf(user1);
+
+        assertEq(user1Balance, 1);
+        assertEq(token.ownerOf(0), user1);
     }
 }
