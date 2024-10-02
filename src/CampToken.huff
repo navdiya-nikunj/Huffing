@@ -6,9 +6,29 @@
 #include "../lib/huffmate/src/tokens/ERC721.huff"
 
 
+#define constant TOKENID_TRACKING_LOCATION = FREE_STORAGE_POINTER()
+
+
+// Interface
+
+#define function mintToken() payable returns ()
+
+
+
 #define macro CONSTRUCTOR() = takes (0) returns (0) {
     ERC721_CONSTRUCTOR()
 }
+
+
+#define macro MINT_TOKEN() = takes(0) returns(0) {
+    [TOKENID_TRACKING_LOCATION] sload           // [unused tokenid]
+    dup1 caller                                 // [msg.sender, unused tokenid, unused tokenid]
+    _MINT()                                     // [unused tokenId]
+    0x01 add                                    // [unused tokenId +1(updated tokenid)]
+    [TOKENID_TRACKING_LOCATION] sstore          // []
+    stop
+}
+
 
 #define macro MAIN() = takes(0) returns(0){
     0x00 calldataload 0xe0 shr                  // function selector
@@ -20,7 +40,7 @@
     //////////////////////////////
     //////////////////////////////
 
-    dup1 __FUNC_SIG(mint)                       eq mint_jump jumpi
+    dup1 __FUNC_SIG(mintToken)                       eq mint_jump jumpi
     dup1 __FUNC_SIG(burn)                       eq burn_jump jumpi
 
     // dup1 __FUNC_SIG("safeMint(address,uint256)") eq safe_mint jumpi
@@ -49,7 +69,7 @@
 
 
     mint_jump:
-        _MINT()
+        MINT_TOKEN()
     burn_jump:
         _BURN()
 
