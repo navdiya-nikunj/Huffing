@@ -13,8 +13,14 @@
 // constants
 #define constant TOKENID_TRACKING_LOCATION = FREE_STORAGE_POINTER()
 #define constant ONE_TIME_MINTING_MAPPING_LOC = FREE_STORAGE_POINTER()
-
 #define constant ADDRESS_TO_TOKENID_MAPPING_LOCATION = FREE_STORAGE_POINTER()
+
+// ERROR Constants
+#define constant CANT_MINT_TWICE_MESSAGE = 0x43414e545f4d494e545f54574943450000000000000000000000000000000000
+#define constant CANT_MINT_TWICE_LENGTH = 0x0f
+
+
+
 
 #define macro WHITELIST() = takes(0) returns(0){
     0x01 0xe487E70718cc0C71117e4852C90814A5CF0F3136 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
@@ -90,21 +96,26 @@
 #define macro MINT_FOR_WHITELISTED() = takes(0) returns(0) {
     // caller only takes 2 gas, dup1 takes 3 gas. Better to call caller than use dup1 if possible
     
-    caller [ONE_TIME_MINTING_MAPPING_LOC]       // [one_time_mapping_slot, msg.sender]
-    LOAD_ELEMENT_FROM_KEYS(0x00)
-    alreadyMintedJump jumpi
+    // caller [ONE_TIME_MINTING_MAPPING_LOC]       // [one_time_mapping_slot, msg.sender]
+    // LOAD_ELEMENT_FROM_KEYS(0x00)
+    // // alreadyMintedJump jumpi
+    // [CANT_MINT_TWICE_MESSAGE]
+    // [CANT_MINT_TWICE_LENGTH]
+    // dup2 REQUIRE()
+    ///@dev you don't need to ensure one time minting, since the tokenid passed in for an address is always the same.
+    /// @dev it will throw the 'already_minted' message at second try. Non-whitelisted can't mint anyway
     caller [ADDRESS_TO_TOKENID_MAPPING_LOCATION]
     LOAD_ELEMENT_FROM_KEYS(0x00)                //[tokenid_from_whitelist]
     dup1 iszero notWhiteListedJump jumpi        // [tokenid_from_whitelist, tokenid_from_whitelist]
     caller                                      // [msg.sender,tokenid]
     _MINT()
     // ensure one time minting
-    0x01 caller [ONE_TIME_MINTING_MAPPING_LOC]  // [one_time_mapping_slot, msg.sender, true]
-    STORE_ELEMENT_FROM_KEYS(0x00)               // []
+    // 0x01 caller [ONE_TIME_MINTING_MAPPING_LOC]  // [one_time_mapping_slot, msg.sender, true]
+    // STORE_ELEMENT_FROM_KEYS(0x00)               // []
     stop
 
 
-    alreadyMintedJump: 0x00 0x00 revert
+    // alreadyMintedJump: 0x00 0x00 revert
     // revert if caller is not whitelisted, i.e if the tokenId for the caller is zero 
     notWhiteListedJump: 0x00 0x00 revert        
 }
