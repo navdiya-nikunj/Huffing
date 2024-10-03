@@ -5,6 +5,8 @@ import {IERC721} from "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 interface IFull721 is IERC721 {
     function mintToken() external payable;
+    function whiteListMinters() external;
+    function getWhiteListedTokeIDForAddress(address) external view returns (uint256);
     function burn(uint256) external;
     function name() external view returns (string memory);
     function symbol() external view returns (string memory);

@@ -1,17 +1,67 @@
 // Imports
-// #include "../lib/huffmate/src/data-structures/Hashmap.huff"
-// #include "../lib/huffmate/src/utils/CommonErrors.huff"
-// #include "../lib/huffmate/src/auth/NonPayable.huff"
-// import probably won't work on the token. Let's see
 #include "../lib/huffmate/src/tokens/ERC721.huff"
+
+
+// Interface
+#define function mintToken() payable returns ()
+#define function whiteListMinters() nonpayable returns()
+#define function getWhiteListedTokeIDForAddress(address) view returns(uint256) 
+
+// TODO: custom errors, whitelisting with corresponding tokenIds, tokenURI
+// TODO: soulBoundMigration, maybe.
 
 // constants
 #define constant TOKENID_TRACKING_LOCATION = FREE_STORAGE_POINTER()
 #define constant ONE_TIME_MINTING_MAPPING_LOC = FREE_STORAGE_POINTER()
 
+#define constant ADDRESS_TO_TOKENID_MAPPING_LOCATION = FREE_STORAGE_POINTER()
 
-// Interface
-#define function mintToken() payable returns ()
+#define macro WHITELIST() = takes(0) returns(0){
+    0x01 0xe487E70718cc0C71117e4852C90814A5CF0F3136 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x02 0x50DF0af8a06f82fCcB0aCb77D8c986785b36d734 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x03 0x7B5A0b267A1D4c744026b4811787e2898AAe4764 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x04 0xCE7c5b4e28D26e88eaF12d19b7E920AF332fe6d6 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x05 0xDeb8D7aA52A7A75B33543536BfCcAe840be24E6a [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x06 0x12896191de42EF8388f2892Ab76b9a728189260A [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x07 0x9d1aAF184154E9d6Fc7d138Ee560134732427f7E [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x08 0xcF78399B272E71F23F00b453005e9ba0EFa9FcDc [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x09 0x7883ecac38077d95e850288A10b4d541448008a7 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x0a 0xc34f95BC9DA5054DfD0116F0AaF5b8703D2c05bd [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x0b 0x24548ce576B6F7aD0222C44BD113B5D196B46B2C [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x0c 0x5f653deaf00e2681254ddA011E8738C289867C55 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x0d 0x5bc1F05F6538947cf2E6B306324Ec434eae9dCA8 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x0e 0xb4cdE5B28C6894E3ddF4F8C79F956D395263C3Bf [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x0f 0x8988b981ACA6889a2A0336BaFaaa7cc34898eb77 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x10 0x5939F00372B62877D9F46f5AB9881402D8006377 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x11 0x3E259685A7b778dE2a8DbdF836659c4011cCAb9e [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x12 0x95eAEb306Ed38493350Ea6d7E4ecaeB03167d1EE [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x13 0xa829A3ccb0D2133b9269225870Ffd875186a0Ba2 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x14 0x36e3C5bD543c22B5bf935F1c0cd76D9A39CAC2Ea [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x15 0xaEadBbc416D1bb7d67a885C1Fbec974a65865e27 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x16 0x453737C505e666d31BCB878818afE5a4986997bF [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x17 0xc46d1B9Eb264De17106cBa44e9c449969AfbcBe8 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x18 0x491aE4A7bE91BB6b84232bAC79A9Cd5AB017E715 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x19 0xd17266057470A096ea346aB6302F5B0187c29c2F [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x1a 0x17717c0A00106657aE5675Fb3200864D7C5e05bB [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    0x1b 0xB58453da52837E5D848f667e3083F32DD991f0A6 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+
+
+    /// @dev Testing Addresses, remove when deploying.
+    // address user1
+    0x45 0x233F20a935E25f6c993a71F72cCBE72c79A1F7FC [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    // address user2
+    0x2a 0x8993e8FD026fC11Ad77fB612fB3175C4c0C55330 [ADDRESS_TO_TOKENID_MAPPING_LOCATION] STORE_ELEMENT_FROM_KEYS(0x00)
+    stop
+}
+
+#define macro GET_WHITELISTED_TOKEN_ID() = takes(0) returns(0){
+    0x04 calldataload                              // [address]
+    [ADDRESS_TO_TOKENID_MAPPING_LOCATION]          // [mapping location, address]
+    LOAD_ELEMENT_FROM_KEYS(0x00)                   // [tokenid]
+    0x00 mstore
+    0x20 0x00 return
+}
+
 
 
 
@@ -22,7 +72,7 @@
 
 #define macro MINT_TOKEN() = takes(0) returns(0) {
     caller [ONE_TIME_MINTING_MAPPING_LOC]       // [one_time_mapping_slot, msg.sender]
-     LOAD_ELEMENT_FROM_KEYS(0x00)               // [whether caller has minted before: true/false]
+    LOAD_ELEMENT_FROM_KEYS(0x00)                // [whether caller has minted before: true/false]
     alreadyMintedJump jumpi
     pop                                         // [true/false] gets popped? Works without it too
     [TOKENID_TRACKING_LOCATION] sload           // [unused tokenid]
@@ -35,6 +85,28 @@
     stop
     alreadyMintedJump: 0x00 0x00 revert          // dumb revert for now. TODO: custom error
 
+}
+
+#define macro MINT_FOR_WHITELISTED() = takes(0) returns(0) {
+    // caller only takes 2 gas, dup1 takes 3 gas. Better to call caller than use dup1 if possible
+    
+    caller [ONE_TIME_MINTING_MAPPING_LOC]       // [one_time_mapping_slot, msg.sender]
+    LOAD_ELEMENT_FROM_KEYS(0x00)
+    alreadyMintedJump jumpi
+    caller [ADDRESS_TO_TOKENID_MAPPING_LOCATION]
+    LOAD_ELEMENT_FROM_KEYS(0x00)                //[tokenid_from_whitelist]
+    dup1 iszero notWhiteListedJump jumpi        // [tokenid_from_whitelist, tokenid_from_whitelist]
+    caller                                      // [msg.sender,tokenid]
+    _MINT()
+    // ensure one time minting
+    0x01 caller [ONE_TIME_MINTING_MAPPING_LOC]  // [one_time_mapping_slot, msg.sender, true]
+    STORE_ELEMENT_FROM_KEYS(0x00)               // []
+    stop
+
+
+    alreadyMintedJump: 0x00 0x00 revert
+    // revert if caller is not whitelisted, i.e if the tokenId for the caller is zero 
+    notWhiteListedJump: 0x00 0x00 revert        
 }
 
 
@@ -70,16 +142,26 @@
 
     dup1 __FUNC_SIG(balanceOf)                  eq balanceOf jumpi
     dup1 __FUNC_SIG(ownerOf)                    eq ownerOf jumpi
+    dup1 __FUNC_SIG(whiteListMinters)           eq whiteListJump jumpi
+    dup1 __FUNC_SIG(getWhiteListedTokeIDForAddress) eq readWhiteListJump jumpi
     
     
     
     0x00 dup1 revert                            // revert if none of the function selectors match. No fallback
 
 
+    // mint_jump:
+    //     MINT_TOKEN()
     mint_jump:
-        MINT_TOKEN()
+        MINT_FOR_WHITELISTED()
     burn_jump:
         _BURN()
+
+    whiteListJump:
+        WHITELIST()
+
+    readWhiteListJump:
+        GET_WHITELISTED_TOKEN_ID()
 
     approve:
         APPROVE()
