@@ -23,9 +23,12 @@ contract TestCampTokenHuff is Test {
 
     function setUp() public {
         token = CampToken(
-            HuffDeployer.config().with_args(bytes.concat(abi.encode(NFT_NAME), abi.encode(NFT_SYMBOL))).deploy(
-                "CampToken"
-            )
+            HuffDeployer
+                .config()
+                .with_args(
+                    bytes.concat(abi.encode(NFT_NAME), abi.encode(NFT_SYMBOL))
+                )
+                .deploy("CampToken")
         );
         token.whiteListMinters();
     }
@@ -89,7 +92,9 @@ contract TestCampTokenHuff is Test {
     function testWhiteListing() public view {
         // vm.prank(user3);
         // token.whiteListMinters();
-        uint256 whiteListTokenId = token.getWhiteListedTokeIDForAddress(0xcF78399B272E71F23F00b453005e9ba0EFa9FcDc);
+        uint256 whiteListTokenId = token.getWhiteListedTokeIDForAddress(
+            0xcF78399B272E71F23F00b453005e9ba0EFa9FcDc
+        );
         assertEq(whiteListTokenId, 8);
     }
 
@@ -112,5 +117,11 @@ contract TestCampTokenHuff is Test {
         vm.prank(user2);
         token.burn(69);
         assertEq(token.balanceOf(user1), 0);
+    }
+
+    function testUri() public {
+        vm.prank(user1);
+        token.mintToken();
+        assertEq(token.tokenURI(0), tokenURI);
     }
 }

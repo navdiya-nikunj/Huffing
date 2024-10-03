@@ -5,7 +5,8 @@
 // Interface
 #define function mintToken() payable returns ()
 #define function whiteListMinters() nonpayable returns()
-#define function getWhiteListedTokeIDForAddress(address) view returns(uint256) 
+#define function getWhiteListedTokeIDForAddress(address) view returns(uint256)
+#define function tokenURI(uint256) view returns (string) 
 
 // TODO: custom errors, whitelisting with corresponding tokenIds, tokenURI
 // TODO: soulBoundMigration, maybe.
@@ -14,12 +15,16 @@
 // #define constant TOKENID_TRACKING_LOCATION = FREE_STORAGE_POINTER()
 // #define constant ONE_TIME_MINTING_MAPPING_LOC = FREE_STORAGE_POINTER()
 #define constant ADDRESS_TO_TOKENID_MAPPING_LOCATION = FREE_STORAGE_POINTER()
+#define constant TOKENURI_LOCATION = FREE_STORAGE_POINTER()
 
+// #define constant TOKEN_URI_BASE = 0x68747470733a2f2f746f6d61746f2d67656f67726170686963616c2d7069672d3930342e6d7970696e6174612e636c6f75642f697066732f516d66416e50645054616f647a31346d7269674b55466e566364534a6a4c76684e69326171466f6d594765725046 // "https://tomato-geographical-pig-904.mypinata.cloud/ipfs/QmfAnPdPTaodz14mrigKUFnVcdSJjLvhNi2aqFomYGerPF"
+#define constant TOKEN_URI_1 = 0x68747470733a2f2f746f6d61746f2d67656f67726170686963616c2d7069672d
+#define constant TOKEN_URI_2 = 0x7069672d3930342e6d7970696e6174612e636c6f75642f697066732f516d6641
+#define constant TOKEN_URI_3 = 0x6e50645054616f647a31346d7269674b55466e566364534a6a4c76684e693261
+#define constant TOKEN_URI_4 = 0x71466f6d59476572504600000000000000000000000000000000000000000000
 // ERROR Constants
 // #define constant CANT_MINT_TWICE_MESSAGE = 0x43414e545f4d494e545f54574943450000000000000000000000000000000000
 // #define constant CANT_MINT_TWICE_LENGTH = 0x0f
-
-
 
 
 #define macro WHITELIST() = takes(0) returns(0){
@@ -118,9 +123,20 @@
     notWhiteListedJump: 0x00 0x00 revert        
 }
 
+
+
+
 #define macro BURN() = takes(0) returns(0) {
     ///@notice can't burn. Once minted is minted!
     0x00 0x00 revert
+}
+
+#define macro STATIC_TOKEN_URI() = takes(0) returns(0) {
+    [TOKEN_URI_1] 0x00 mstore
+    [TOKEN_URI_2] 0x20 mstore
+    [TOKEN_URI_3] 0x40 mstore
+    [TOKEN_URI_4] 0x60 mstore
+    0x6a 0x00 return
 }
 
 
@@ -158,6 +174,7 @@
     dup1 __FUNC_SIG(ownerOf)                    eq ownerOf jumpi
     dup1 __FUNC_SIG(whiteListMinters)           eq whiteListJump jumpi
     dup1 __FUNC_SIG(getWhiteListedTokeIDForAddress) eq readWhiteListJump jumpi
+
     
     
     
@@ -194,7 +211,7 @@
     symbol:
         SYMBOL()
     tokenURI:
-        TOKEN_URI()
+        STATIC_TOKEN_URI()
     supportsInterface:
         SUPPORTS_INTERFACE()
 
