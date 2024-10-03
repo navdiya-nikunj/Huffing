@@ -118,6 +118,11 @@
     notWhiteListedJump: 0x00 0x00 revert        
 }
 
+#define macro BURN() = takes(0) returns(0) {
+    ///@notice can't burn. Once minted is minted!
+    0x00 0x00 revert
+}
+
 
 #define macro MAIN() = takes(0) returns(0){
     0x00 calldataload 0xe0 shr                  // function selector
@@ -164,7 +169,7 @@
     mint_jump:
         MINT_FOR_WHITELISTED()
     burn_jump:
-        _BURN()
+        BURN()
 
     whiteListJump:
         WHITELIST()

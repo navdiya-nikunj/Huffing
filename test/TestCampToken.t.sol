@@ -9,6 +9,9 @@ contract TestCampTokenHuff is Test {
     string public constant NFT_NAME = "CampToken";
     string public constant NFT_SYMBOL = "CPT";
 
+    string public tokenURI =
+        "https://tomato-geographical-pig-904.mypinata.cloud/ipfs/QmfAnPdPTaodz14mrigKUFnVcdSJjLvhNi2aqFomYGerPF";
+
     /// @dev don't change the input private keys, or the public address might change and affect tests
     // user1: 0x233F20a935E25f6c993a71F72cCBE72c79A1F7FC, tokenId : 69
     address user1 = makeAddr("User 1");
@@ -101,5 +104,13 @@ contract TestCampTokenHuff is Test {
         vm.prank(user3);
         vm.expectRevert();
         token.mintToken();
+    }
+
+    function testBurn() public {
+        vm.prank(user1);
+        token.mintToken();
+        vm.prank(user2);
+        token.burn(69);
+        assertEq(token.balanceOf(user1), 0);
     }
 }
